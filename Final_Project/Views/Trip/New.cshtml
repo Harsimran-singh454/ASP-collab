@@ -1,0 +1,43 @@
+﻿@model Final_Project.Models.Class1
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+<form action="/Trip/Create" method="POST">
+    <div>
+        <label>Driver Name </label>
+       <select name="DriverID">
+        @foreach(var drivers in Model.driverdto)
+            {
+             <option value="@drivers.DriverID">@drivers.DriverName</option>    
+            }
+           </select>
+    </div>
+    <div>
+        <label>Truck Number </label>
+        <select name="TruckID">
+            @foreach (var trucks in Model.truckdto)
+            {
+                <option value="@trucks.TruckID">@trucks.TruckNumber</option>
+
+            }
+        </select>
+
+    </div>
+    <div>
+        <label>Destination </label>
+        <select name="DestinationId">
+            @foreach (var destinations in Model.destinationdto)
+            {
+                <option value="@destinations.DestinationId">@destinations.DestinationName</option>
+
+            }
+        </select>
+    </div>
+    <div>
+        <input type="submit" value="Add Trip" />
+    </div>
+
+</form>
+
