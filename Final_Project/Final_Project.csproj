@@ -353,12 +353,15 @@
     <Content Include="Views\Groups\Details.cshtml" />
     <Content Include="Views\Groups\Edit.cshtml" />
     <Content Include="Views\Groups\Index.cshtml" />
+    <Content Include="Views\Message\Delete.cshtml" />
+    <Content Include="Views\Message\Chat.cshtml" />
+    <Content Include="Views\Message\Error.cshtml" />
+    <Content Include="Views\Message\List.cshtml" />
+    <Content Include="Views\Groups\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\DriverData\" />
-    <Folder Include="Views\Group\" />
-    <Folder Include="Views\Message\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

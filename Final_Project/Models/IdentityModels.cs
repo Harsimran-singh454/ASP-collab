@@ -33,9 +33,8 @@ namespace Final_Project.Models
         public DbSet<Destination> Destinations { get; set; }
 
         public DbSet<Trip> Trips { get; set; }
-        public DbSet<Group> Group { get; set; }
-        public DbSet<Message> Message { get; set; }
-
+        public DbSet<Message> Messages { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
         public static ApplicationDbContext Create()
         {

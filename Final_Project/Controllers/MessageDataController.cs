@@ -10,34 +10,102 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Final_Project.Models;
 
-namespace Final_Project.Controllers
+namespace PassionProject_chatMessenger.Controllers
 {
     public class MessageDataController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: api/MessageData
-        public IQueryable<Message> GetMessage()
+        // GET: api/MessageData/List
+        /// <summary>
+        /// This Function is for listing all the messages
+        /// </summary>
+        /// <returns>All the messages in the datavase</returns>
+        [HttpGet]
+        [ResponseType(typeof(GroupDto))]
+        public IEnumerable<MessageDto> List()
         {
-            return db.Message;
+            List<Message> messages = db.Messages.ToList();
+            List<MessageDto> MessageDtos = new List<MessageDto>();
+
+            messages.ForEach(m => MessageDtos.Add(new MessageDto()
+            {
+                MessageId = m.MessageId,
+                //user1 =m.user1,
+                //user2 =m.user2,
+                Content = m.Content,
+                GroupId = m.Id,
+                GroupName = m.Group.GroupName,
+            }));
+
+            return MessageDtos;
         }
 
-        // GET: api/MessageData/5
-        [ResponseType(typeof(Message))]
-        public IHttpActionResult GetMessage(int id)
+
+
+        // GET: api/MessageData/ListMessagesForGroup/{group id}
+        /// <summary>
+        /// This function is used for fetching messages associated to a specific group with matching ID
+        /// </summary>
+        /// <param name="id">The Group Id</param>
+        /// <returns>Returns list of messages associated with the matching group</returns>
+        [HttpGet]
+        public IHttpActionResult ListMessagesForGroup(int id)
         {
-            Message message = db.Message.Find(id);
-            if (message == null)
+            List<Message> Messages = db.Messages.Where(a => a.Id == id).ToList();
+            List<MessageDto> MessageDtos = new List<MessageDto>();
+
+            Messages.ForEach(a => MessageDtos.Add(new MessageDto()
+            {
+                MessageId = a.MessageId,
+                Content = a.Content,
+                GroupId = a.Group.Id,
+                GroupName = a.Group.GroupName
+            }));
+
+            return Ok(MessageDtos);
+        }
+
+
+        // GET: api/MessageData/FindMessage/5
+        /// <summary>
+        /// This function is used for fetching the message with matching Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Returns details about a message</returns>
+        [ResponseType(typeof(Message))]
+        [HttpGet]
+        public IHttpActionResult FindMessage(int id)
+        {
+            Message Message = db.Messages.Find(id);
+            MessageDto MessageDto = new MessageDto()
+            {
+                MessageId = Message.MessageId,
+                //user1 = Message.user1,
+                //user2 = Message.user2,
+                Content = Message.Content,
+                GroupId = Message.Id,
+                GroupName = Message.Group.GroupName,
+            };
+            if (Message == null)
             {
                 return NotFound();
             }
 
-            return Ok(message);
+            return Ok(MessageDto);
         }
 
-        // PUT: api/MessageData/5
+
+        //PUT: api/MessageData/updateMessage/5
+        /// <summary>
+        /// This Function is used for updating a message with matching Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="message"></param>
+        /// <returns>Uppdates the Message with matching Id</returns>
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutMessage(int id, Message message)
+        [HttpPost]
+        public IHttpActionResult updateMessage(int id, Message message)
         {
             if (!ModelState.IsValid)
             {
@@ -70,32 +138,48 @@ namespace Final_Project.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/MessageData
+
+
+
+
+        // POST: api/MessageData/addMessage
+        /// <summary>
+        /// This function adds a new message to the database
+        /// </summary>
+        /// <param name="message">This object holds the data passed from the form</param>
+        /// <returns>Creates a new message in the database</returns>
         [ResponseType(typeof(Message))]
-        public IHttpActionResult PostMessage(Message message)
+        [HttpPost]
+        public IHttpActionResult addMessage(Message message)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Message.Add(message);
+            db.Messages.Add(message);
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = message.MessageId }, message);
         }
 
-        // DELETE: api/MessageData/5
+        // DELETE: api/MessageData/DeleteMessage/5
+        /// <summary>
+        /// Finds the message matching with the Id passed an deletes it from the database
+        /// </summary>
+        /// <param name="id">the targeted MessageId</param>
+        /// <returns>Removes a message from the database</returns>
         [ResponseType(typeof(Message))]
+        [HttpPost]
         public IHttpActionResult DeleteMessage(int id)
         {
-            Message message = db.Message.Find(id);
+            Message message = db.Messages.Find(id);
             if (message == null)
             {
                 return NotFound();
             }
 
-            db.Message.Remove(message);
+            db.Messages.Remove(message);
             db.SaveChanges();
 
             return Ok(message);
@@ -112,7 +196,7 @@ namespace Final_Project.Controllers
 
         private bool MessageExists(int id)
         {
-            return db.Message.Count(e => e.MessageId == id) > 0;
+            return db.Messages.Count(e => e.MessageId == id) > 0;
         }
     }
 }

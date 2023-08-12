@@ -8,36 +8,86 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Diagnostics;
+using Final_Project.Migrations;
 using Final_Project.Models;
 
-namespace Final_Project.Controllers
+namespace PassionProject_chatMessenger.Controllers
 {
     public class GroupsDataController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: api/GroupsData
-        public IQueryable<Group> GetGroup()
+
+        // GET: api/GroupsData/ListGroups
+
+        /// <summary>
+        /// This function is for fetching list of groups and messages associated with it
+        /// </summary>
+        /// <returns> Returns a list of groups in the database </returns>
+        [HttpGet]
+        [ResponseType(typeof(GroupDto))]
+        public IEnumerable<GroupDto> ListGroups()
         {
-            return db.Group;
+            List<Group> Groups = db.Groups.ToList();
+            List<GroupDto> GroupDtos = new List<GroupDto>();
+            List<Message> MessageList = new List<Message>();
+
+            Groups.ForEach(g => GroupDtos.Add(new GroupDto()
+            {
+                Id = g.Id,
+                GroupName = g.GroupName,
+                Messages = MessageList
+            }));
+
+            return GroupDtos;
         }
 
-        // GET: api/GroupsData/5
+
+
+
+
+        // GET: api/GroupsData/FindGroup/5
+
+        /// <summary>
+        /// This function is for finding a group in the database using its ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Return details of a group with matching ID</returns>
         [ResponseType(typeof(Group))]
-        public IHttpActionResult GetGroup(int id)
+        [HttpGet]
+        public IHttpActionResult FindGroup(int id)
         {
-            Group group = db.Group.Find(id);
-            if (group == null)
+            Group Group = db.Groups.Find(id);
+            List<Message> msgs = db.Messages.Where(x => x.Id == id).ToList();
+            GroupDto GroupDto = new GroupDto()
+            {
+                Id = Group.Id,
+                GroupName = Group.GroupName,
+                Messages = msgs
+
+            };
+            if (Group == null)
             {
                 return NotFound();
             }
 
-            return Ok(group);
+            return Ok(GroupDto);
         }
 
-        // PUT: api/GroupsData/5
+
+
+
+
+        // PUT: api/GroupsData/UpdateGroup/5
+        /// <summary>
+        /// This function is for updating the group with matching ID and data to be entered
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="group"></param>
+        /// <returns>Returns the updated group</returns>
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutGroup(int id, Group group)
+        public IHttpActionResult UpdateGroup(int id, Group group)
         {
             if (!ModelState.IsValid)
             {
@@ -70,32 +120,44 @@ namespace Final_Project.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/GroupsData
+        // POST: api/GroupsData/AddGroup
+        /// <summary>
+        /// This function is for adding a new group to the database
+        /// </summary>
+        /// <param name="group">This parameters holds the values passed fromo the form</param>
+        /// <returns></returns>
+        [HttpPost]
         [ResponseType(typeof(Group))]
-        public IHttpActionResult PostGroup(Group group)
+        public IHttpActionResult AddGroup(Group group)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Group.Add(group);
+            db.Groups.Add(group);
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = group.Id }, group);
         }
 
-        // DELETE: api/GroupsData/5
+        // DELETE: api/GroupsData/DeleteGroup/5
+        /// <summary>
+        /// This function is used for deleteing the group with matching ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Delets the group from the database</returns>
+        [HttpPost]
         [ResponseType(typeof(Group))]
         public IHttpActionResult DeleteGroup(int id)
         {
-            Group group = db.Group.Find(id);
+            Group group = db.Groups.Find(id);
             if (group == null)
             {
                 return NotFound();
             }
 
-            db.Group.Remove(group);
+            db.Groups.Remove(group);
             db.SaveChanges();
 
             return Ok(group);
@@ -112,7 +174,7 @@ namespace Final_Project.Controllers
 
         private bool GroupExists(int id)
         {
-            return db.Group.Count(e => e.Id == id) > 0;
+            return db.Groups.Count(e => e.Id == id) > 0;
         }
     }
 }

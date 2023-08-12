@@ -1,127 +1,205 @@
-﻿using System;
+﻿using Final_Project.Models;
+using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
-using System.Net;
+using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
-using Final_Project.Models;
+using System.Web.Script.Serialization;
 
-namespace Final_Project.Controllers
+namespace PassionProject_chatMessenger.Controllers
 {
     public class GroupsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        // GET: Groups
-        public ActionResult Index()
+        private static readonly HttpClient client;
+        private JavaScriptSerializer jss = new JavaScriptSerializer();
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        static GroupsController()
         {
-            return View(db.Group.ToList());
+            client = new HttpClient();
+            client.BaseAddress = new Uri("https://localhost:44325/api/");
         }
 
-        // GET: Groups/Details/5
-        public ActionResult Details(int? id)
+
+        // GET: Group/List
+        /// <summary>
+        /// This method returns a view with list of groups
+        /// </summary>
+        /// <returns>Return a veiw with list of groups</returns>
+
+        public ActionResult List()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Group group = db.Group.Find(id);
-            if (group == null)
-            {
-                return HttpNotFound();
-            }
-            return View(group);
+
+            // Retrieve list of animals from GroupsData Api
+            //curl-https://localhost:44325/api/GroupsData/ListGroups
+
+            string url = "GroupsData/ListGroups";
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            IEnumerable<GroupDto> groups = response.Content.ReadAsAsync<IEnumerable<GroupDto>>().Result;
+
+            return View(groups);
         }
 
-        // GET: Groups/Create
+        // GET: Group/Details/5
+        /// <summary>
+        /// This method is for seeing details of a group
+        /// </summary>
+        /// <param name="id">target GrouupId</param>
+        /// <returns>Returns a view with group Data</returns>
+        public ActionResult Details(int id)
+        {
+            // Retrieve details of one group using GroupsData Api
+            //curl-https://localhost:44325/api/GroupsData/FindGroup/{id}
+
+            string url = "GroupsData/FindGroup/" + id;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            GroupDto SelectedGroup = response.Content.ReadAsAsync<GroupDto>().Result;
+
+            return View(SelectedGroup);
+        }
+
+        // GET: Group/Create
+        /// <summary>
+        /// This function returns a view with create form
+        /// </summary>
+        /// <returns>Returns a view with create group form</returns>
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Groups/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Group/CreateGroup/{forData}
+        /// <summary>
+        /// This method calls api to create new group in the database
+        /// </summary>
+        /// <param name="group"></param>
+        /// <returns>Returns list of groups with new group</returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,GroupName")] Group group)
+        public ActionResult CreateGroup(Group group)
         {
-            if (ModelState.IsValid)
-            {
-                db.Group.Add(group);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+            Debug.WriteLine("the json payload is :");
 
-            return View(group);
+            //objective: add a new group using the API
+            //curl -H "Content-Type:application/json" -d @addGroup.json https://localhost:44324/api/GroupData/AddGroup 
+
+            string url = "GroupsData/AddGroup";
+
+
+            string jsonpayload = jss.Serialize(group);
+            //Debug.WriteLine(jsonpayload);
+
+            HttpContent content = new StringContent(jsonpayload);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("List");
+            }
+            else
+            {
+                return RedirectToAction("Error");
+            }
         }
 
-        // GET: Groups/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Error()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Group group = db.Group.Find(id);
-            if (group == null)
-            {
-                return HttpNotFound();
-            }
-            return View(group);
+
+            return View();
         }
 
-        // POST: Groups/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+        // GET: Group/Edit/5
+        /// <summary>
+        /// This function is for finding a group and returning a view with update form
+        /// </summary>
+        /// <param name="id">target group Id</param>
+        /// <returns>Returns a view with update form</returns>
+        [Authorize]
+        public ActionResult Edit(int id)
+        {
+
+            //objective: Update a group using the API
+            //curl -H "Content-Type:application/json" -d @updateGroup.json https://localhost:44324/api/GroupData/FindGroup/{id}
+
+
+            string url = "GroupsData/FindGroup/" + id;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            GroupDto groupSeleted = response.Content.ReadAsAsync<GroupDto>().Result;
+            return View(groupSeleted);
+        }
+
+        // POST: Group/Update/5
+        /// <summary>
+        /// This method calls api to update a group in the database
+        /// </summary>
+        /// <param name="id">target group id</param>
+        /// <param name="group">Form data</param>
+        /// <returns>Return list of groups with updated target group</returns>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,GroupName")] Group group)
+        public ActionResult Update(int id, Group group)
         {
-            if (ModelState.IsValid)
+            string url = "GroupsData/UpdateGroup/" + id;
+            string jsonpayload = jss.Serialize(group);
+            HttpContent content = new StringContent(jsonpayload);
+            content.Headers.ContentType.MediaType = "application/json";
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
+            if (response.IsSuccessStatusCode)
             {
-                db.Entry(group).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("List");
             }
-            return View(group);
+            else
+            {
+                return RedirectToAction("Error");
+            }
         }
 
-        // GET: Groups/Delete/5
-        public ActionResult Delete(int? id)
+        // GET: Group/Delete/5
+        /// <summary>
+        /// This methods returns view with target group details to delete it 
+        /// </summary>
+        /// <param name="id">target group id</param>
+        /// <returns>returns a delete view with group id</returns>
+        [Authorize]
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Group group = db.Group.Find(id);
-            if (group == null)
-            {
-                return HttpNotFound();
-            }
-            return View(group);
+            string url = "GroupsData/FindGroup/" + id;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            GroupDto SelectedGroup = response.Content.ReadAsAsync<GroupDto>().Result;
+
+            return View(SelectedGroup);
         }
 
-        // POST: Groups/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        // POST: Group/DeleteConfirm/5
+        /// <summary>
+        /// This method calls api to delete a group from the database
+        /// </summary>
+        /// <param name="id">target group id</param>
+        /// <param name="collection"></param>
+        /// <returns>Return list of groups with one less group</returns>
+        [HttpPost]
+        public ActionResult DeleteConfirm(int id, FormCollection collection)
         {
-            Group group = db.Group.Find(id);
-            db.Group.Remove(group);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+            string url = "GroupsData/DeleteGroup/" + id;
+            HttpContent content = new StringContent("");
+            content.Headers.ContentType.MediaType = "application/json";
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            if (response.IsSuccessStatusCode)
             {
-                db.Dispose();
+                return RedirectToAction("List");
             }
-            base.Dispose(disposing);
+            else
+            {
+                return RedirectToAction("Error");
+            }
         }
     }
 }
