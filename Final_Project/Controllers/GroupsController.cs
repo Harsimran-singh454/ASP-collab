@@ -26,7 +26,7 @@ namespace Final_Project.Controllers
         }
 
 
-        // GET: Group/List
+        // GET: Groups/List
         /// <summary>
         /// This method returns a view with list of groups
         /// </summary>
@@ -45,7 +45,7 @@ namespace Final_Project.Controllers
             return View(groups);
         }
 
-        // GET: Group/Details/5
+        // GET: Groups/Details/5
         /// <summary>
         /// This method is for seeing details of a group
         /// </summary>
@@ -64,7 +64,7 @@ namespace Final_Project.Controllers
             return View(SelectedGroup);
         }
 
-        // GET: Group/Create
+        // GET: Groups/Create
         /// <summary>
         /// This function returns a view with create form
         /// </summary>
@@ -74,7 +74,7 @@ namespace Final_Project.Controllers
             return View();
         }
 
-        // POST: Group/CreateGroup/{forData}
+        // POST: Groups/CreateGroup/{forData}
         /// <summary>
         /// This method calls api to create new group in the database
         /// </summary>
