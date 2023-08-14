@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
-using System.Net.Http;
-using System.Diagnostics;
-using System.Web.Script.Serialization;
 using Final_Project.Models;
-using System.Reflection;
+using System.Web.Script.Serialization;
+using Microsoft.SqlServer.Server;
+using Final_Project.Migrations;
 
-namespace PassionProject_chatMessenger.Controllers
+namespace Final_Project.Controllers
 {
     public class MessageController : Controller
 

@@ -1,14 +1,16 @@
-﻿using Final_Project.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
+using Final_Project.Models;
 using System.Web.Script.Serialization;
+using Microsoft.SqlServer.Server;
+using Final_Project.Migrations;
 
-namespace PassionProject_chatMessenger.Controllers
+namespace Final_Project.Controllers
 {
     public class GroupsController : Controller
     {
@@ -33,7 +35,6 @@ namespace PassionProject_chatMessenger.Controllers
         public ActionResult List()
         {
 
-            // Retrieve list of animals from GroupsData Api
             //curl-https://localhost:44325/api/GroupsData/ListGroups
 
             string url = "GroupsData/ListGroups";

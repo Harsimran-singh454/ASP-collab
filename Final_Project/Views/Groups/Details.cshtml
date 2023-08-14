@@ -1,26 +1,31 @@
-﻿@model Final_Project.Models.Group
+﻿@model Final_Project.Models.GroupDto
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Group Info</h2>
 
-<div>
-    <h4>Group</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.GroupName)
-        </dt>
+<h3>@Model.GroupName</h3>
+<a href="/Group/Edit/@Model.Id">Update</a>
+<a href="/Group/Delete/@Model.Id" class="btn-danger">Delete</a>
 
-        <dd>
-            @Html.DisplayFor(model => model.GroupName)
-        </dd>
+<div style=" padding: 2em; display:flex; flex-direction:column; justify-items:center;">
 
-    </dl>
+    @foreach (var msg in Model.Messages)
+    {
+        <h4>@msg.Content - <a style="color:red; font-size:10px;" href="/Message/Delete/@msg.MessageId"> Delete</a></h4>
+    }
+
+    <form action="/Message/Create" method="post">
+        <fieldset>
+            <input type="text" name="Content" placeholder="type your message here.." />
+            <input type="hidden" name="user1" value="user1" />
+            <input type="hidden" name="user1" value="user2" />
+            <input type="hidden" name="Timestamp" value="2020/02/02" />
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <input type="submit" value="Send" />
+        </fieldset>
+    </form>
+
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
