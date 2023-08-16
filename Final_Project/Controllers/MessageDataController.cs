@@ -10,7 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Final_Project.Models;
 
-namespace PassionProject_chatMessenger.Controllers
+namespace Final_Project.Controllers
 {
     public class MessageDataController : ApiController
     {

@@ -12,7 +12,7 @@ using System.Diagnostics;
 using Final_Project.Migrations;
 using Final_Project.Models;
 
-namespace PassionProject_chatMessenger.Controllers
+namespace Final_Project.Controllers
 {
     public class GroupsDataController : ApiController
     {
