@@ -12,8 +12,10 @@ namespace Final_Project.Models
         [Key]
         public int MessageId { get; set; }
         public string Content { get; set; }
-        public string user1 { get; set; }
-        public string user2 { get; set; }
+
+        [ForeignKey("ApplicationUser")]
+        public string UserID { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
         // a message can belong to one group
         // Single group can have many messages
@@ -26,8 +28,7 @@ namespace Final_Project.Models
     public class MessageDto
     {
         public int MessageId { get; set; }
-        public int user1 { get; set; }
-        public int user2 { get; set; }
+        public int UserID { get; set; }
         public string Content { get; set; }
         public int GroupId { get; set; }
         public string GroupName { get; set; }

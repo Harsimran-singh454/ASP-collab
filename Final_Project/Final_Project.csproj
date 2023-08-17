@@ -222,6 +222,10 @@
     <Compile Include="Migrations\202308111809227_groupMessage.designer.cs">
       <DependentUpon>202308111809227_groupMessage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308171857524_messagwe.cs" />
+    <Compile Include="Migrations\202308171857524_messagwe.designer.cs">
+      <DependentUpon>202308171857524_messagwe.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Class1.cs" />
@@ -384,6 +388,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308111809227_groupMessage.resx">
       <DependentUpon>202308111809227_groupMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308171857524_messagwe.resx">
+      <DependentUpon>202308171857524_messagwe.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

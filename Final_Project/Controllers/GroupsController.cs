@@ -37,8 +37,8 @@ namespace Final_Project.Controllers
 
             //curl-https://localhost:44325/api/GroupsData/ListGroups
 
-            string url = "GroupsData/ListGroups";
-            HttpResponseMessage response = client.GetAsync(url).Result;
+            string url1 = "https://localhost:44325/api/GroupsData/ListGroups";
+            HttpResponseMessage response = client.GetAsync(url1).Result;
 
             IEnumerable<GroupDto> groups = response.Content.ReadAsAsync<IEnumerable<GroupDto>>().Result;
 
@@ -54,7 +54,7 @@ namespace Final_Project.Controllers
         public ActionResult Details(int id)
         {
             // Retrieve details of one group using GroupsData Api
-            //curl-https://localhost:44325/api/GroupsData/FindGroup/{id}
+            // curl-https://localhost:44325/api/GroupsData/FindGroup/{id}
 
             string url = "GroupsData/FindGroup/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;

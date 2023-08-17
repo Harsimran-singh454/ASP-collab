@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
+using System.Web;
+using System.Web.Mvc;
+using Final_Project.Models;
+using System.Web.Script.Serialization;
+using Microsoft.SqlServer.Server;
 using System.Web.Http;
 using System.Web.Http.Description;
-using System.Diagnostics;
-using Final_Project.Migrations;
-using Final_Project.Models;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Net;
 
 namespace Final_Project.Controllers
 {
@@ -25,7 +27,7 @@ namespace Final_Project.Controllers
         /// This function is for fetching list of groups and messages associated with it
         /// </summary>
         /// <returns> Returns a list of groups in the database </returns>
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         [ResponseType(typeof(GroupDto))]
         public IEnumerable<GroupDto> ListGroups()
         {
@@ -55,7 +57,7 @@ namespace Final_Project.Controllers
         /// <param name="id"></param>
         /// <returns>Return details of a group with matching ID</returns>
         [ResponseType(typeof(Group))]
-        [HttpGet]
+        [System.Web.Http.HttpGet]
         public IHttpActionResult FindGroup(int id)
         {
             Group Group = db.Groups.Find(id);
@@ -86,6 +88,8 @@ namespace Final_Project.Controllers
         /// <param name="id"></param>
         /// <param name="group"></param>
         /// <returns>Returns the updated group</returns>
+        /// 
+
         [ResponseType(typeof(void))]
         public IHttpActionResult UpdateGroup(int id, Group group)
         {
@@ -126,7 +130,7 @@ namespace Final_Project.Controllers
         /// </summary>
         /// <param name="group">This parameters holds the values passed fromo the form</param>
         /// <returns></returns>
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         [ResponseType(typeof(Group))]
         public IHttpActionResult AddGroup(Group group)
         {
@@ -147,7 +151,7 @@ namespace Final_Project.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Delets the group from the database</returns>
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         [ResponseType(typeof(Group))]
         public IHttpActionResult DeleteGroup(int id)
         {
