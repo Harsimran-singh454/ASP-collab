@@ -22,7 +22,7 @@ namespace Final_Project.Controllers
         static GroupsController()
         {
             client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44325/api/");
+            client.BaseAddress = new Uri("https://localhost:44368/api/");
         }
 
 
@@ -37,8 +37,8 @@ namespace Final_Project.Controllers
 
             //curl-https://localhost:44325/api/GroupsData/ListGroups
 
-            string url1 = "https://localhost:44325/api/GroupsData/ListGroups";
-            HttpResponseMessage response = client.GetAsync(url1).Result;
+            string url = "GroupsData/ListGroups";
+            HttpResponseMessage response = client.GetAsync(url).Result;
 
             IEnumerable<GroupDto> groups = response.Content.ReadAsAsync<IEnumerable<GroupDto>>().Result;
 

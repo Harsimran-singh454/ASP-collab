@@ -1,7 +1,11 @@
-﻿
+﻿@model IEnumerable<Final_Project.Models.MessageDto>
 @{
-    ViewBag.Title = "t";
+    ViewBag.Title = "List";
 }
 
-<h2>t</h2>
+<h2>Messages</h2>
 
+@foreach (var message in Model)
+{
+    <h2> <a href="/Message/Details/@message.MessageId">@message.Content</a> </h2>
+}

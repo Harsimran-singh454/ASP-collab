@@ -25,7 +25,7 @@ namespace Final_Project.Controllers
         static MessageController()
         {
             client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:44325/api/");
+            client.BaseAddress = new Uri("https://localhost:44368/api/");
         }
 
         // GET: Message
@@ -98,7 +98,7 @@ namespace Final_Project.Controllers
             HttpResponseMessage response = client.PostAsync(url, content).Result;
             if (response.IsSuccessStatusCode)
             {
-                return RedirectToAction("Details", "Group", new
+                return RedirectToAction("Details", "Groups", new
                 {
                     id = message.Id
                 });

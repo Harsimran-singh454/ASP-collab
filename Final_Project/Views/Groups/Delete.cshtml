@@ -7,8 +7,8 @@
 
 <div>
     <p>Are you Sure you want to delete @Model.GroupName Group? </p>
-    <form action="/Group/DeleteConfirm/@Model.Id" method="post">
+    <form action="/Groups/DeleteConfirm/@Model.Id" method="post">
         <input type="submit" name="name" class="btn btn-danger" value="Yes" />
     </form>
-    <a href="/Group/Details/@Model.Id" class="btn bg-danger">  No </a>
+    <a href="/Groups/Details/@Model.Id" class="btn bg-danger">  No </a>
 </div>
