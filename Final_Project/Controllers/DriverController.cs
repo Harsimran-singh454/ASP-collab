@@ -16,23 +16,27 @@ namespace Final_Project.Controllers
     {
         private JavaScriptSerializer jss = new JavaScriptSerializer();
         // GET: Driver/list
+        [Authorize(Roles = "Admin")]
         public ActionResult List()
         {
             HttpClient client = new HttpClient()
             {
-               
+
             };
             string url = "https://localhost:44368/api/driverdata/listdrivers";
-            HttpResponseMessage response =client.GetAsync(url).Result;
+            HttpResponseMessage response = client.GetAsync(url).Result;
 
             IEnumerable<DriverDto> drivers = response.Content.ReadAsAsync<IEnumerable<DriverDto>>().Result;
-            
+
             return View(drivers);
         }
 
         // GET: Driver/Details/5
         public ActionResult Details(int id)
         {
+            Driver ViewModel = new Driver();
+
+            ViewModel.IsAdmin = User.Identity.IsAuthenticated && User.IsInRole("Admin");
             HttpClient client = new HttpClient()
             {
 
@@ -46,6 +50,7 @@ namespace Final_Project.Controllers
         }
 
         // GET: Driver/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult New()
         {
             return View();
@@ -53,6 +58,7 @@ namespace Final_Project.Controllers
 
         // POST: Driver/Create
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create(Driver driver)
         {
             HttpClient client = new HttpClient()
@@ -71,6 +77,7 @@ namespace Final_Project.Controllers
         }
 
         // GET: Driver/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
             return View();
@@ -78,6 +85,7 @@ namespace Final_Project.Controllers
 
         // POST: Driver/Edit/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id, FormCollection collection)
         {
             try
@@ -93,13 +101,14 @@ namespace Final_Project.Controllers
         }
 
         // GET: Driver/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id)
         {
             HttpClient client = new HttpClient()
             {
 
             };
-            string url = "https://localhost:44368/api/driverdata/finddriver/"+id;
+            string url = "https://localhost:44368/api/driverdata/finddriver/" + id;
             HttpResponseMessage response = client.GetAsync(url).Result;
             DriverDto selecteddriver = response.Content.ReadAsAsync<DriverDto>().Result;
             return View(selecteddriver);
@@ -107,6 +116,7 @@ namespace Final_Project.Controllers
 
         // POST: Driver/Delete/5
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int id, Driver driver)
         {
 

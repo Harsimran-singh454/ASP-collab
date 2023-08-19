@@ -13,11 +13,15 @@ namespace Final_Project.Models
         [Key]
         public int DriverID { get; set; }
         public string DriverName { get; set; }
-   
+
+        public bool IsAdmin { get; set; }
+
     }
     public class DriverDto
     {
         public int DriverID { get; set; }
         public string DriverName { get; set; }
+        public bool IsAdmin { get; set; }
+
     }
 }

@@ -20,13 +20,13 @@ namespace Final_Project.Controllers
         [HttpGet]
         public IEnumerable<DriverDto> ListDrivers()
         {
-           List<Driver>Drivers= db.Drivers.ToList();
+            List<Driver> Drivers = db.Drivers.ToList();
             List<DriverDto> DriverDtos = new List<DriverDto>();
 
             Drivers.ForEach(a => DriverDtos.Add(new DriverDto()
             {
-                DriverID= a.DriverID,
-                DriverName= a.DriverName
+                DriverID = a.DriverID,
+                DriverName = a.DriverName
             }));
             return DriverDtos;
         }
@@ -53,6 +53,7 @@ namespace Final_Project.Controllers
         // PUT: api/DriverData/5
         [ResponseType(typeof(void))]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult UpdateDriver(int id, Driver driver)
         {
             if (!ModelState.IsValid)
@@ -89,6 +90,7 @@ namespace Final_Project.Controllers
         // POST: api/DriverData/AddDriver
         [ResponseType(typeof(Driver))]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult AddDriver(Driver driver)
         {
             if (!ModelState.IsValid)
@@ -104,6 +106,7 @@ namespace Final_Project.Controllers
 
         [ResponseType(typeof(Driver))]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult DeleteDriver(int id)
         {
             Driver driver = db.Drivers.Find(id);
