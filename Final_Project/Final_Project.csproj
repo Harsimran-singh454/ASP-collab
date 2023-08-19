@@ -226,6 +226,10 @@
     <Compile Include="Migrations\202308171857524_messagwe.designer.cs">
       <DependentUpon>202308171857524_messagwe.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202308190800305_drivadmin.cs" />
+    <Compile Include="Migrations\202308190800305_drivadmin.designer.cs">
+      <DependentUpon>202308190800305_drivadmin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Class1.cs" />
@@ -391,6 +395,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202308171857524_messagwe.resx">
       <DependentUpon>202308171857524_messagwe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202308190800305_drivadmin.resx">
+      <DependentUpon>202308190800305_drivadmin.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
